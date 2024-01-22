@@ -91,26 +91,27 @@ def get_pdf_text(filename):
 def process_uploaded_file(uploaded_file):
     # Load document if file is uploaded
     if uploaded_file is not None:
-        # loader (추가)
-        # pdf파일을 처리하려면?
+        raw_text = ""
+        # loader
         if uploaded_file.type == 'application/pdf':
             raw_text = get_pdf_text(uploaded_file)
-        # hwp파일을 처리하려면? (hwp loader(parser)는 난이도 매우 어려움)
         elif uploaded_file.type == 'application/octet-stream':
             raw_text = get_hwp_text(uploaded_file)
-
-        # splitter (추가)
+            
+        # splitter
         text_splitter = CharacterTextSplitter(
-            separator = "\n\n",
+            # separator = "\r\n",
+            separator = "\n",
             chunk_size = 1000,
-            chunk_overlap = 500,
+            chunk_overlap  = 200,
             length_function = len,
             is_separator_regex = False,
         )
         all_splits = text_splitter.create_documents([raw_text])
+        
         print("총 " + str(len(all_splits)) + "개의 passage")
-
-        # storage (추가)
+        
+        # storage
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
                 
         return vectorstore, raw_text
@@ -119,31 +120,31 @@ def process_uploaded_file(uploaded_file):
 # generate response using RAG technic
 def generate_response(query_text, vectorstore, callback):
 
-    # retriever (추가)
+    # retriever 
     docs_list = vectorstore.similarity_search(query_text, k=3)
     docs = ""
     for i, doc in enumerate(docs_list):
         docs += f"'문서{i+1}':{doc.page_content}\n"
-    print(docs)
-    # generator (추가)
-    # llm = ChatOpenAI(model_name="gpt-4", temperature=0, streaming=True, callbacks=[callback])
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[callback])
+        
+    # generator
+    llm = ChatOpenAI(model_name="gpt-4", temperature=0, streaming=True, callbacks=[callback])
     
-    # chaining (추가)
+    # chaining
     rag_prompt = [
         SystemMessage(
-            content="너는 문서에 대해 질의응답을 하는 '시나모롤'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 없으면 니가 아는 선에서 적절하고 상냥하게 답변해줘. 이모티콘을 사용해서 친근하게 답변해줘!"
+            content="너는 문서에 대해 질의응답을 하는 '씨엔이'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 대답하지 마."
         ),
         HumanMessage(
             content=f"질문:{query_text}\n\n{docs}"
         ),
     ]
+    
     response = llm(rag_prompt)
-
     return response.content
 
 
 def generate_summarize(raw_text, callback):
+
     # generator
     llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0, streaming=True, callbacks=[callback])
     
@@ -158,31 +159,19 @@ def generate_summarize(raw_text, callback):
     ]
     
     response = llm(rag_prompt)
-
-    return response.content
-
-def generate_song(raw_text, callback):
-    # generator
-    llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0, streaming=True, callbacks=[callback])
-    
-    # prompt formatting
-    rag_prompt = [
-        SystemMessage(
-            content="구름에 대한 동요를 만들어서 불러줘."
-        ),
-        HumanMessage(
-            content=raw_text
-        ),
-    ]
-    
-    response = llm(rag_prompt)
-
     return response.content
 
 
 # page title
 st.set_page_config(page_title='🦜🔗 문서 기반 요약 및 QA 챗봇')
 st.title('🦜🔗 문서 기반 요약 및 QA 챗봇')
+
+import os
+api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+save_button = st.sidebar.button("Save Key")
+if save_button and len(api_key)>10:
+    os.environ["OPENAI_API_KEY"] = api_key
+    st.sidebar.success("API Key saved successfully!")
 
 # file upload
 uploaded_file = st.file_uploader('Upload an document', type=['hwp','pdf'])
@@ -216,12 +205,6 @@ if prompt := st.chat_input("'요약'이라고 입력해보세요!"):
         
         if prompt == "요약":
             response = generate_summarize(st.session_state['raw_text'],stream_handler)
-            st.session_state["messages"].append(
-                ChatMessage(role="assistant", content=response)
-            )
-        
-        elif  prompt == "노래":
-            response = generate_song(st.session_state['raw_text'],stream_handler)
             st.session_state["messages"].append(
                 ChatMessage(role="assistant", content=response)
             )
