@@ -7,6 +7,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import ChatMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
 
