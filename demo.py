@@ -7,7 +7,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import ChatMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
 
@@ -128,8 +127,8 @@ def generate_response(query_text, vectorstore, callback):
         docs += f"'문서{i+1}':{doc.page_content}\n"
         
     # generator
-    # llm = ChatOpenAI(model_name="gpt-4", temperature=0, streaming=True, callbacks=[callback])
-    llm = ChatGoogleGenerativeAI(model_name="gemini-pro", temperature=0, streaming=True, callbacks=[callback])
+    llm = ChatOpenAI(model_name="gpt-3.5", temperature=0, streaming=True, callbacks=[callback])
+    # llm = ChatGoogleGenerativeAI(model_name="gemini-pro", temperature=0, streaming=True, callbacks=[callback])
     
     # chaining
     rag_prompt = [
@@ -148,8 +147,8 @@ def generate_response(query_text, vectorstore, callback):
 def generate_summarize(raw_text, callback):
 
     # generator
-    # llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0, streaming=True, callbacks=[callback])
-    llm = ChatGoogleGenerativeAI(model_name="gemini-pro", temperature=0, streaming=True, callbacks=[callback])
+    llm = ChatOpenAI(model_name="gpt-3.5-1106-preview", temperature=0, streaming=True, callbacks=[callback])
+    # llm = ChatGoogleGenerativeAI(model_name="gemini-pro", temperature=0, streaming=True, callbacks=[callback])
     
     # prompt formatting
     rag_prompt = [
@@ -170,10 +169,10 @@ st.set_page_config(page_title='🦜🔗 문서 기반 요약 및 QA 챗봇')
 st.title('🦜🔗 문서 기반 요약 및 QA 챗봇')
 
 import os
-api_key = st.sidebar.text_input("Enter your GOOGLE_API_KEY", type="password")
+api_key = st.sidebar.text_input("Enter your OpenAI api key", type="password")
 save_button = st.sidebar.button("Save Key")
 if save_button and len(api_key)>10:
-    os.environ["GOOGLE_API_KEY"] = api_key
+    os.environ["OPENAI_API_KEY"] = api_key
     st.sidebar.success("API Key saved successfully!")
 
 # file upload
