@@ -30,7 +30,7 @@ jsonpatch==1.33
 jsonpointer==2.4
 jsonschema==4.20.0
 jsonschema-specifications==2023.11.2
-langchain==0.1.26
+langchain==0.1.9
 langchain-core==0.1.26
 langchain-google-genai==0.0.9
 langsmith==0.0.69
