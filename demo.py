@@ -127,7 +127,7 @@ def generate_response(query_text, vectorstore, callback):
         docs += f"'문서{i+1}':{doc.page_content}\n"
         
     # generator
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0, streaming=True, callbacks=[callback])
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[callback])
     
     # chaining
     rag_prompt = [
@@ -146,7 +146,7 @@ def generate_response(query_text, vectorstore, callback):
 def generate_summarize(raw_text, callback):
 
     # generator
-    llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0, streaming=True, callbacks=[callback])
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[callback])
     
     # prompt formatting
     rag_prompt = [
