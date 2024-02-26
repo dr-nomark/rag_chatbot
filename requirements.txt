@@ -33,7 +33,7 @@ jsonschema-specifications==2023.11.2
 langchain==0.1.9
 langchain-core==0.1.26
 langchain-google-genai==0.0.9
-langsmith==0.0.69
+langsmith==0.1.8
 libhwp==0.2.0
 markdown-it-py==3.0.0
 MarkupSafe==2.1.3
