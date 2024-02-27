@@ -8,6 +8,7 @@ from langchain.schema import HumanMessage, SystemMessage
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import ChatMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 # from dotenv import load_dotenv
 
@@ -113,7 +114,7 @@ def process_uploaded_file(uploaded_file):
         print("총 " + str(len(all_splits)) + "개의 passage")
         
         # storage
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=None)
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=GoogleGenerativeAIEmbeddings())
                 
         return vectorstore, raw_text
     return None
