@@ -114,7 +114,7 @@ def process_uploaded_file(uploaded_file):
         print("총 " + str(len(all_splits)) + "개의 passage")
         
         # storage
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=GoogleGenerativeAIEmbeddings("models/embedding-001"))
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001"))
                 
         return vectorstore, raw_text
     return None
