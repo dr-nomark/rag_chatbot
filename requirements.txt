@@ -30,9 +30,11 @@ jsonpatch==1.33
 jsonpointer==2.4
 jsonschema==4.20.0
 jsonschema-specifications==2023.11.2
-langchain==0.0.346
-langchain-core==0.0.10
-langsmith==0.0.69
+langchain==0.1.9
+langchain-community==0.0.24
+langchain-core==0.1.26
+langchain-google-genai==0.0.9
+langsmith==0.1.8
 libhwp==0.2.0
 markdown-it-py==3.0.0
 MarkupSafe==2.1.3
