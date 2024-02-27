@@ -152,9 +152,9 @@ def generate_summarize(raw_text, callback):
     
     # prompt formatting
     rag_prompt = [
-        SystemMessage(
-            content="다음 나올 문서를 'Notion style'로 요약해줘. 중요한 내용만."
-        ),
+        # SystemMessage(
+        #     content="다음 나올 문서를 'Notion style'로 요약해줘. 중요한 내용만."
+        # ),
         HumanMessage(
             content=raw_text
         ),
