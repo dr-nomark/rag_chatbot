@@ -133,9 +133,9 @@ def generate_response(query_text, vectorstore, callback):
     
     # chaining
     rag_prompt = [
-        SystemMessage(
-            content="너는 문서에 대해 질의응답을 하는 '씨엔이'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 대답하지 마."
-        ),
+        # SystemMessage(
+        #     content="너는 문서에 대해 질의응답을 하는 '씨엔이'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 대답하지 마."
+        # ),
         HumanMessage(
             content=f"질문:{query_text}\n\n{docs}"
         ),
